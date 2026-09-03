@@ -352,19 +352,33 @@ function teacherAttendancePage(){
  const I=inst(),T=I.teachers.find(t=>t.id===session.id);
  return pageTitle("Give Attendance","Attendance is enabled only for your currently running class.")+attendanceForm(I,T);
 }
-function downloadText(filename,text,type="text/plain"){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=filename;a.click();URL.revokeObjectURL(a.href)}
+function pdfHeader(doc,title,subtitle){
+ doc.setFillColor(124,92,255);doc.rect(0,0,doc.internal.pageSize.getWidth(),34,"F");
+ doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(16);doc.text("UPDATES FOR YOU",14,15);
+ doc.setFontSize(11);doc.setFont("helvetica","normal");doc.text(title,14,24);
+ doc.setFontSize(9);doc.text(subtitle,14,30);
+ doc.setTextColor(20,20,30);
+}
 function downloadRoutine(){
- const I=inst(),days=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
- let out=`UPDATES FOR YOU - WEEKLY ROUTINE\n${I.name}\n\n`;
- days.forEach(d=>{out+=`${d}\n`;I.routine.forEach(r=>out+=`${r.start}-${r.end} | ${r.subject} | ${r.teacherId?teacherName(I,r.teacherId):"Break"} | ${r.className}\n`);out+="\n"});
- out+="Sunday - Universal Holiday\n";
- downloadText("updates-for-you-weekly-routine.txt",out)
+ const I=inst();
+ const doc=new jspdf.jsPDF();
+ pdfHeader(doc,I.name,"Weekly Routine • Monday – Saturday (same schedule each working day) • Sunday: Universal Holiday");
+ const rows=I.routine.map(r=>[r.start+" – "+r.end,r.subject,r.teacherId?teacherName(I,r.teacherId):"Break",r.className||""]);
+ doc.autoTable({startY:40,head:[["Time","Subject","Teacher","Class"]],body:rows,theme:"grid",headStyles:{fillColor:[139,108,255]},styles:{fontSize:9}});
+ doc.save("updates-for-you-weekly-routine.pdf");
 }
 function downloadAttendance(sid){
- const I=inst(),rows=[["Date","Subject","Status","Teacher","Class"]];
- Object.values(I.attendance).filter(x=>x.studentId===sid).forEach(r=>rows.push([r.date,r.subject,r.status,teacherName(I,r.teacherId),r.className]));
- const csv=rows.map(x=>x.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n");
- downloadText(`attendance-${sid}.csv`,csv,"text/csv")
+ const I=inst(),S=I.students.find(s=>s.id===sid);
+ const records=Object.values(I.attendance).filter(x=>x.studentId===sid).sort((a,b)=>a.date.localeCompare(b.date));
+ const doc=new jspdf.jsPDF();
+ pdfHeader(doc,I.name,`Attendance Record • ${S?S.name+" ("+S.id+")":sid}`);
+ const rows=records.map(r=>[r.date,r.subject,r.status.toUpperCase(),teacherName(I,r.teacherId),r.className]);
+ doc.autoTable({startY:40,head:[["Date","Subject","Status","Teacher","Class"]],body:rows,theme:"grid",headStyles:{fillColor:[139,108,255]},styles:{fontSize:9}});
+ const p=records.length?records.filter(r=>r.status==="present").length:0;
+ const pct=records.length?Math.round(p/records.length*100):100;
+ const y=doc.lastAutoTable.finalY+10;
+ doc.setFontSize(10);doc.text(`Total: ${records.length}  •  Present: ${p}  •  Absent: ${records.length-p}  •  Percentage: ${pct}%`,14,y);
+ doc.save(`attendance-${sid}.pdf`);
 }
 function toggleTheme(){document.body.classList.toggle("light");localStorage.setItem("UFY_THEME",document.body.classList.contains("light")?"light":"dark")}
 function toast(msg,kind=""){const t=document.createElement("div");t.className="toast "+(kind==="good"?"good":"");t.textContent=msg;document.getElementById("toast").appendChild(t);setTimeout(()=>t.remove(),3000)}
