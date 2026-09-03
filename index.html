@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7c5cff" />
+  <meta name="description" content="UPDATES FOR YOU - School & College Attendance Register" />
+  <title>UPDATES FOR YOU | Attendance Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-orb orb-a"></div><div class="bg-orb orb-b"></div>
+  <div id="toast"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#" onclick="showHome();return false;">
+      <span class="brand-mark">U</span>
+      <span><b>UPDATES</b><small>FOR YOU</small></span>
+    </a>
+    <div class="top-actions">
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">◐</button>
+      <button id="logoutBtn" class="btn ghost hidden" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main id="app">
+    <section id="homeView" class="view active">
+      <div class="hero">
+        <div class="eyebrow">SMART ATTENDANCE • ROUTINE • CAMPUS MANAGEMENT</div>
+        <h1>One place for your<br><span>school & college.</span></h1>
+        <p>Manage institutions, teachers, students, routines, holidays and daily attendance from a beautiful, simple dashboard.</p>
+        <button class="btn primary xl" onclick="openLogin()">Open Portal <span>→</span></button>
+      </div>
+      <div class="feature-grid">
+        <article><div class="feature-icon">🏫</div><h3>Institution Control</h3><p>Create your school or college profile, manage users and build your own timetable.</p></article>
+        <article><div class="feature-icon">👨‍🏫</div><h3>Teacher Portal</h3><p>Teachers see their classes and can mark attendance only for the class currently running.</p></article>
+        <article><div class="feature-icon">🎓</div><h3>Student Portal</h3><p>Students can check daily routine, attendance and download their weekly schedule.</p></article>
+        <article><div class="feature-icon">📅</div><h3>Smart Calendar</h3><p>Sunday is universal holiday. Institutions can declare working days as holidays with a reason.</p></article>
+      </div>
+    </section>
+
+    <section id="loginView" class="view">
+      <div class="login-wrap">
+        <button class="back" onclick="showHome()">← Back</button>
+        <div class="login-card glass">
+          <div class="login-head">
+            <div class="brand-mark big">U</div>
+            <div><div class="eyebrow">SECURE PORTAL</div><h2 id="loginTitle">Choose login type</h2></div>
+          </div>
+          <div class="auth-switch"><button class="auth-link active" id="loginModeBtn" onclick="setAuthMode('login')">Login</button><button class="auth-link" id="registerModeBtn" onclick="setAuthMode('register')">Register School / College</button></div><div id="registrationPanel" class="hidden"><form onsubmit="handleRegister(event)"><div class="form-grid"><label>School / College Name<input id="regName" required></label><label>Institution ID<input id="regId" required></label><label>Admin Password<input id="regPassword" type="password" required></label><label>Confirm Password<input id="regPassword2" type="password" required></label><label>Institution Type<select id="regType"><option>School</option><option>College</option></select></label></div><button class="btn primary full" type="submit">Create Institution →</button></form></div><div id="loginPanel"><div class="role-tabs">
+            <button class="role active" data-role="institution" onclick="selectRole('institution')"><b>🏫</b><span>School / College</span><small>Admin access</small></button>
+            <button class="role" data-role="teacher" onclick="selectRole('teacher')"><b>👨‍🏫</b><span>Teacher</span><small>Attendance access</small></button>
+            <button class="role" data-role="student" onclick="selectRole('student')"><b>🎓</b><span>Student</span><small>Routine & attendance</small></button>
+          </div>
+          <form id="loginForm" onsubmit="handleLogin(event)">
+            <div id="institutionFields">
+              <label>Institution ID<input id="instId" placeholder="e.g. CUTM001" required></label>
+              <label>Admin Password<input id="adminPin" type="password" placeholder="Your institution password" required></label>
+            </div>
+            <div id="userFields" class="hidden">
+              <label>Your ID Number<input id="userId" placeholder="e.g. T001 / S001"></label>
+              <label>Full Name<input id="userName" placeholder="Enter your registered name"></label>
+              <label>Password<input id="userPassword" type="password" placeholder="Your password"></label>
+              <label>Institution ID<input id="userInstId" placeholder="e.g. CUTM001"></label>
+            </div>
+            <button class="btn primary full" type="submit">Continue <span>→</span></button>
+          </form>
+          </div><p class="demo-note">Demo institution: <b>CUTM001</b> • Admin Password: <b>1234</b> • Teacher: <b>T001 / Ananya Das / teacher123</b> • Student: <b>S001 / Rahul Kumar / student123</b></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboardView" class="view">
+      <div class="dashboard-shell">
+        <aside class="sidebar glass">
+          <div class="side-user"><div id="sideAvatar" class="avatar">A</div><div><b id="sideName">Admin</b><small id="sideRole">Institution</small></div></div>
+          <nav id="sideNav"></nav>
+          <div class="side-bottom"><span class="status-dot"></span> System ready</div>
+        </aside>
+        <section class="content">
+          <div class="mobile-head"><button class="btn ghost" onclick="toggleSidebar()">☰</button><b>UPDATES FOR YOU</b></div>
+          <div id="dashboardContent"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
