@@ -1,1 +1,9 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.smruti264.twa",
+        "sha256_cert_fingerprints": ["60:2B:74:29:5C:33:79:FC:59:7D:84:BE:97:C4:6B:18:6E:5D:35:67:28:EC:23:A0:0D:7B:3A:89:63:8B:82:2D"]
+      }
+    }]
 
