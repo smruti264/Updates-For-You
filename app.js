@@ -2,8 +2,8 @@
    SUPABASE CONFIG — fill these in from your Supabase project:
    Dashboard → Settings → API → Project URL / anon public key
    ============================================================ */
-const SUPABASE_URL = "https://YOUR-PROJECT-REF.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR-ANON-PUBLIC-KEY";
+const SUPABASE_URL = "https://lrhuceoknqcxmxkbejcf.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyaHVjZW9rbnFjeG14a2JlamNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0MjY3MTAsImV4cCI6MjEwNDAwMjcxMH0.PLcOJwZzg5t6T8dMaoSJZ1B50aht5ge_1ODfqJ6KnaE";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const DB_NOT_CONFIGURED = SUPABASE_URL.includes("YOUR-PROJECT-REF");
 
